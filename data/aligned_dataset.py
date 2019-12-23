@@ -1,5 +1,3 @@
-### Copyright (C) 2017 NVIDIA Corporation. All rights reserved. 
-### Licensed under the CC BY-NC-SA 4.0 license (https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode).
 import os.path
 from data.base_dataset import BaseDataset, get_params, get_transform, normalize
 from data.image_folder import make_dataset
@@ -19,11 +17,18 @@ class AlignedDataset(BaseDataset):
         self.A_paths = sorted(glob.glob(os.path.join(self.opt.dataroot, 'gtFine', self.opt.phase, '*', '*_gtFine_labelIds.png')))
 
         ### input B (real images)
-        if opt.isTrain:
+# <<<<<<< HEAD
+        if opt.isTrain or opt.use_encoded_image:
             # dir_B = '_B' if self.opt.label_nc == 0 else '_img'
             # self.dir_B = os.path.join(opt.dataroot, opt.phase + dir_B)
             # self.B_paths = sorted(make_dataset(self.dir_B))
             self.B_paths = sorted(glob.glob(os.path.join(self.opt.dataroot, 'leftImg8bit', self.opt.phase, '*', '*_leftImg8bit.png')))
+# =======
+#         if opt.isTrain or opt.use_encoded_image:
+#             dir_B = '_B' if self.opt.label_nc == 0 else '_img'
+#             self.dir_B = os.path.join(opt.dataroot, opt.phase + dir_B)
+#             self.B_paths = sorted(make_dataset(self.dir_B))
+# >>>>>>> 5a2c87201c5957e2bf51d79b8acddb9cc1920b26
 
             ### instance maps
         if not opt.no_instance:
@@ -53,8 +58,13 @@ class AlignedDataset(BaseDataset):
 
         B_tensor = inst_tensor = feat_tensor = 0
         ### input B (real images)
-        if self.opt.isTrain:
+# <<<<<<< HEAD
+#         if self.opt.isTrain:
+#             B_path = self.B_paths[index]
+# =======
+        if self.opt.isTrain or self.opt.use_encoded_image:
             B_path = self.B_paths[index]
+# >>>>>>> 5a2c87201c5957e2bf51d79b8acddb9cc1920b26
             B = Image.open(B_path).convert('RGB')
             transform_B = get_transform(self.opt, params)
             B_tensor = transform_B(B)
